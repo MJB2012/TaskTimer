@@ -30,11 +30,12 @@ interface Cycle {
   task: string
   minutesAmount: number
   startDate: Date
+  interrupedDate?: Date
 }
 
 export function Home() {
   const [cycles, setCycles] = useState<Cycle[]>([])
-  const [activeCycleId, setActiveCycle] = useState<string | null>(null)
+  const [activeCycleId, setActiveCycleId] = useState<string | null>(null)
   const [secondsPassed, setSecondsPassed] = useState(0)
   const { register, handleSubmit, watch, reset } = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
@@ -60,9 +61,18 @@ export function Home() {
 
     reset()
   }
-  
-  function handleCycleInterruption () {
-    setActiveCycle(null)
+
+  function handleCycleInterruption() {
+    setCycles(
+      cycles.map((cycle) => {
+        if (cycle.id === activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() }
+        } else {
+          return cycle
+        }
+      }),
+    )
+    setActiveCycleId(null)
   }
 
   const activeCycle = cycles.find((cycle) => cycle.id === activeCycleId)
@@ -141,7 +151,7 @@ export function Home() {
         </CountDownContainer>
 
         {activeCycleId ? (
-          <StopCountDownButton type="button">
+          <StopCountDownButton onClick={handleCycleInterruption} type="button">
             <HandPalm size={24} />
             Interromper
           </StopCountDownButton>
