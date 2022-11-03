@@ -38,17 +38,7 @@ export function cyclesReducers(state: CyclesState, action: any) {
       })
     }
 
-    case ActionTypes.MARK_CYCLE_AS_FINISHED: /*    return {
-        ...state,
-        cycles: state.cycles.map((cycle) => {
-          if (cycle.id === state.activeCycleId) {
-            return { ...cycle, finishedDate: new Date() }
-          } else {
-            return cycle
-          }
-        }),
-        activeCycleId: null,
-      } */ {
+    case ActionTypes.MARK_CYCLE_AS_FINISHED: {
       const currentCycleIndex = state.cycles.findIndex((cycle) => {
         return cycle.id === state.activeCycleId
       })
